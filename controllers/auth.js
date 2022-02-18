@@ -4,16 +4,14 @@ const bcryptjs = require('bcryptjs')
 exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
     path: '/login',
-    pageTitle: 'Login',
-    isAuthenticated: false
+    pageTitle: 'Login'
   });
 };
 
 exports.getSignup = (req, res, next)=>{
   res.render('auth/signup', {
     path: '/signup',
-    pageTitle: 'Signup',
-    isAuthenticated: false
+    pageTitle: 'Signup'
   });
 }
 
@@ -34,7 +32,6 @@ exports.postLogin = (req, res, next)=>{
       req.session.isLoggedIn = true
       req.session.user = user
       req.session.save(err=>{
-        console.log(err);
         res.redirect("/")
       })
     })
