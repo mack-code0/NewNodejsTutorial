@@ -8,6 +8,14 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
+exports.getSignup = (req, res, next)=>{
+  res.render('auth/signup', {
+    path: '/signup',
+    pageTitle: 'Signup',
+    isAuthenticated: false
+  });
+}
+
 
 exports.postLogin = (req, res, next)=>{
   // res.setHeader("Set-Cookie", "loggedIn=true")  
@@ -20,6 +28,10 @@ exports.postLogin = (req, res, next)=>{
       res.redirect("/login")
     }
   }).catch(err=>console.log(err))
+}
+
+exports.postSignup = (req, res, next) => {
+  const {email, password, confirmPassword} = req.body
 }
 
 exports.postLogout = (req, res, next)=>{
