@@ -4,6 +4,7 @@ const express = require('express');
 const session = require('express-session')
 const bodyParser = require('body-parser');
 const csrf = require('csurf')
+const flash = require('connect-flash')
 const mongoose = require('mongoose');
 const mongoDbStore = require('connect-mongodb-session')(session)
 
@@ -34,8 +35,8 @@ app.use(session({
   saveUninitialized: false,
   store: store
 }))
-
 app.use(csrfProtection)
+app.use(flash())
 
 app.use((req, res, next)=>{
   res.locals.isAuthenticated = req.session.isLoggedIn
