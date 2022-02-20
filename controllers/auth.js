@@ -68,15 +68,15 @@ exports.postSignup = (req, res, next) => {
       return newUser.save()
     })
     .then(result=>{
-      const DOMAIN = 'sandboxc696bf8267be477385c1c4c7513f01b5.mailgun.org';
+      const DOMAIN = process.env.MAIL_DOMAIN;
       const mg = mailgun({
-        apiKey: "d673032e3cec3b8679f80eb68a04dd75-c3d1d1eb-575a1723",
+        apiKey: process.env.API_KEY,
         domain: DOMAIN
       });
       console.log(email);
       const data = {
         from: 'Excited User <'+ email +'>',
-        to: ['macdon202@gmail.com'],
+        to: ['USER202@gmail.com'],
         subject: 'Hello',
         text: 'Testing some Mailgun awesomness!'
       };
