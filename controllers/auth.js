@@ -1,18 +1,25 @@
 const User = require("../models/user");
 const bcryptjs = require('bcryptjs')
 
+const mailgun = require("mailgun-js")
+
 exports.getLogin = (req, res, next) => {
+  let error = req.flash('error')
+  let errorMessage = error.length>0?error:null
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    errorMessage: req.flash("error")
+    errorMessage
   });
 };
 
 exports.getSignup = (req, res, next)=>{
+  let error = req.flash('error')
+  let errorMessage = error.length>0?error:null
   res.render('auth/signup', {
     path: '/signup',
-    pageTitle: 'Signup'
+    pageTitle: 'Signup',
+    errorMessage
   });
 }
 
@@ -46,6 +53,7 @@ exports.postSignup = (req, res, next) => {
   User.findOne({email: email})
   .then(user=>{
     if(user){
+      req.flash("error", "Email already exists!")
       return res.redirect("/signup")
     }
 
@@ -56,11 +64,27 @@ exports.postSignup = (req, res, next) => {
         email,
         cart: { items: [] }
       })
-  
+
       return newUser.save()
     })
     .then(result=>{
-      res.redirect("/login")
+      const DOMAIN = 'sandboxc696bf8267be477385c1c4c7513f01b5.mailgun.org';
+      const mg = mailgun({
+        apiKey: "d673032e3cec3b8679f80eb68a04dd75-c3d1d1eb-575a1723",
+        domain: DOMAIN
+      });
+      console.log(email);
+      const data = {
+        from: 'Excited User <'+ email +'>',
+        to: ['macdon202@gmail.com'],
+        subject: 'Hello',
+        text: 'Testing some Mailgun awesomness!'
+      };
+      mg.messages().send(data, function (error, body) {
+        console.log(error);
+        console.log(body);
+        res.redirect("/login")
+      });
     })
   })
   .catch(err => console.log(err))
